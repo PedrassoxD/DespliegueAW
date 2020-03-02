@@ -1,0 +1,39 @@
+version: '2'
+services:
+
+	db:
+		image: mysql:5.7
+		container_name: mysql-tomcat
+		volumes:
+			- mysql_data:/var/lib/mysql
+		restart: always
+		ports:
+				- 3306:3306
+		environment:
+			MYSQL_ROOT_PASSWORD: 
+		networks:
+			- red_net			
+
+	adminer:
+		image: adminer
+		restart: always
+		ports:
+			- 8080:8080
+		networks:
+			- red_net
+
+	tomcat:
+		image: tomcat 9:0
+		links:
+			- db:mysql-tomcat
+		ports:
+			- 80:8080
+		container_name: tomcat
+		volumes:
+			- ./tomcat:/tomcat
+		networks:
+			- red_net			
+
+networks:
+  red_net:
+    driver: bridge

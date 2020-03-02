@@ -1,0 +1,38 @@
+version: '2'
+services:
+
+	db:
+		image: mysql:5.7
+		container_name: mysql-wildfly
+		volumes:
+			- mysql_data:/var/lib/mysql
+		restart: always
+		ports:
+				- 3306:3306
+		environment:
+			MYSQL_ROOT_PASSWORD: 
+		networks:
+			- red_net			
+
+	adminer:
+		image: adminer
+		restart: always
+		ports:
+			- 8080:8080
+		networks:
+			- red_net
+
+	wildfly:
+        	build: ./wildfly
+        	container_name: wildfly
+        	ports:
+            		- 8080:8080
+            		- 9990:9990
+        	volumes:
+            		- ./deployments:/opt/jboss/wildfly/standalone/deployments
+		networks:
+			- red_net	
+
+networks:
+  red_net:
+    driver: bridge
